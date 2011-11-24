@@ -3,20 +3,21 @@ require "active_record"
 require "active_support/all"
 
 module FlagShihTzu
+  extend ActiveSupport::Concern
+
   # taken from ActiveRecord::ConnectionAdapters::Column
   TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE']
 
   DEFAULT_COLUMN_NAME = 'flags'
 
-  def self.included(base)
-    base.extend(ClassMethods)
-    base.class_attribute :flag_options
-    base.class_attribute :flag_mapping
-  end
-
   class IncorrectFlagColumnException < Exception; end
   class NoSuchFlagQueryModeException < Exception; end
   class NoSuchFlagException < Exception; end
+
+  included do
+    class_attribute :flag_options
+    class_attribute :flag_mapping
+  end
 
   module ClassMethods
     def has_flags(*args)
